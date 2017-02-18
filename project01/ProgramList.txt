@@ -1,0 +1,64 @@
+
+Libraries:
+
+- controls.py
+	- Implements the standard GPIO controls
+- sensor.py
+	- Implements the two sound distance sensors
+	minDistance('cm') returns the shorter of the
+	two distances of the two sensors
+- sensor00.py
+	- Implements mean distance of two sensors
+	(USELESS) -> see sensor.py
+- gyroWrapper.py
+	- Implements the start and read of the 
+	rotation around z-axis given by the 
+	C-Program
+
+
+
+Programs:
+
+- autonomousViewed.sh
+	- chmod -x autonomous.sh created this file
+	  and starts both, the camera GUI and the
+    	  autonomous01 script (sudo sh *.sh)
+- controlledViewed.sh
+	- script that starts the remote controller
+	  and the camera GUI 
+
+- autonomous00.py
+	- preliminary autonomous driving -> 01
+- autonomous01.py
+	- FUNCTIONAL autonomous driving w/o camera
+
+- robotViaPhone.py
+	- FUNCTIONAL remote controlled bot via phone
+	  requires to start the XServer and connect
+- scanning01.py
+	- FUNTIONAL autonomous scanning of the direct
+	  surrounding of the bot w/ naive rotation
+     	  identification (before MPU6050)
+- camScript.py
+	- FUNCTIONAL script for a GUI window which
+	  implements the camera module
+- gyroRotate.py
+	- FUNTIONAL program that rotates the bot
+	  w/ a hard-coded value around its z-axis
+
+- vectorDrive.py
+	- IN PROGRESS
+
+
+
+Tests / Scripts:
+
+- basics01.py
+	- Tutorial on GPIO initialization
+- basics02.py
+	- Tutorial on GPIO movements
+- controlsBCM.py
+	- Implements GPIO controls w/ BCM encoding
+- radar.py
+	- Helper program for the scanning01.py script
+
