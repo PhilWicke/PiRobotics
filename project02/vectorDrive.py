@@ -114,8 +114,8 @@ def driveRoute(actionList):
     try:
         for elem in actionList:
 
-            angle = elem[0]
-            pathLen = elem[1]
+            angle = elem[0]             # FIRST: ANGLE
+            pathLen = elem[1]           # SECOND: PATH
 
             # no bias if no distance
             if pathLen == 0:
@@ -179,7 +179,7 @@ def startRoute(event):
         print "Invalid points set up."
         return
 
-    # calculate euclidean distance between points
+    # calculate (n-1) euclidean distances between (n) points
     dists = np.zeros(len(x_pts)-1)
     
     for i in range(len(x_pts)-1):
@@ -189,19 +189,21 @@ def startRoute(event):
         dists[i] = distEuclidean(pOne,pTwo)
         print "Distance: "+str(dists[i])
         print ""
-        
+      
     # calculate vectors
-    vects = np.zeros([len(x_pts),len(x_pts)])
-    vects[0] = (0 , -1)  # DEFINE START VECTOR
-    for i in range(len(vects)+1):
-
-        #pOne = np.array([x_pts[i],y_pts[i]])
-        #pTwo = np.array([x_pts[i+1],y_pts[i+1]])
-        vects[i+1] = [x_pts[i]-x_pts[i+1],y_pts[i]-y_pts[i+1]]
+    vects = np.zeros((len(x_pts),2)) 
+    vects[0][0] = 0     # start
+    vects[0][1] = 20    # vector
  
-
+    for i in range(len(x_pts)-1):
+        # start with second vector (not start vector)
+        vects[i+1] = [x_pts[i]-x_pts[i+1],y_pts[i]-y_pts[i+1]]
+        print "Vector: "+str(vects[i][0])+"|"+str(vects[i][1])
+    
     # calculate angle between all points
-    angles = np.zeros(len(x_pts))
+    angles = np.zeros(len(x_pts)-1)
+
+    # TODO: 
 
     
 #######################################################################
@@ -216,15 +218,18 @@ Neglect first point for driving but account for direction of start
 # Load image of flat 100px = 1,00m 
 img = imread('flatPic01.PNG')
 
-
-# store coordinates
-x_pts = []
-y_pts = []
-
+# store coordinates (initialize start point)
+x_pts = [112]
+y_pts = [217]
 
 # create graph
 fig, ax = plt.subplots()
+# set start point and start vector
+line,   = ax.plot(x_pts[0], y_pts[0], marker='o', color = 'g')
 line,   = ax.plot(x_pts, y_pts, marker='o')
+plt.arrow(x_pts[0],y_pts[0], 0.0, 20, head_width = 5, head_length=5) # define start vector
+
+# add functionality
 fig.canvas.mpl_connect('button_press_event', onpick)
 fig.canvas.mpl_connect('key_press_event', startRoute)
 plt.imshow(img,alpha=0.5)
