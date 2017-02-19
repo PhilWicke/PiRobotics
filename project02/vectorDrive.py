@@ -9,6 +9,7 @@ import controls as ctr
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.misc import imread
+from math import pi, acos
 
 
 
@@ -167,11 +168,14 @@ def onpick(event):
 
 def distEuclidean(a,b):
     return np.sqrt(np.sum((a-b)**2))
-
-def points2vec(p1,p2):
-    return np.array([p1[0]-p2[0],p1[1]-p2[1]])
+   
 
 def startRoute(event):
+
+    # define start vector / directionality
+    startVec = (0,-20)
+    downWards = True
+    
     if (len(x_pts)<2) or (len(y_pts)<2):
         print "No path has been defined, click on at least 2 points."
         return
@@ -181,29 +185,62 @@ def startRoute(event):
 
     # calculate (n-1) euclidean distances between (n) points
     dists = np.zeros(len(x_pts)-1)
+    # calculate vectors
+    vects = np.zeros((len(x_pts),2))
+    # start vector
+    vects[0][0] = startVec[0]     # [vector] X
+    vects[0][1] = startVec[1]    # [vector] Y
+    # calculate (n-1) angles between (n) points
+    angles = np.zeros(len(x_pts)-1)
+    tempLen = 0
     
     for i in range(len(x_pts)-1):
 
         pOne = np.array([x_pts[i],y_pts[i]])
         pTwo = np.array([x_pts[i+1],y_pts[i+1]])
         dists[i] = distEuclidean(pOne,pTwo)
+        vects[i+1] = [x_pts[i+1]-x_pts[i],y_pts[i+1]-y_pts[i]]
+
+        # Calculate the angle
+        if i == 0:
+            lenOne  = startVec[1]
+            lenTwo  = dists[i]
+            tempLen = lenTwo
+        else:
+            lenOne  = tempLen
+            lenTwo  = dists[i]
+            tempLen = lenTwo
+
+        v1 = vects[i]
+        v2 = vects[i+1]
+
+        if v1[1] < 0:
+            downWards = True
+        else:
+            downWards = False
+        #v[0]: x | v[1]: y
+        dotPr = np.dot([v1[0],v1[1]],[v2[0],v2[1]])
+        cosx  = dotPr/(lenOne*lenTwo)
+        inRad = acos(cosx)
+
+        if dotPr < 0:
+            toLeft = -1
+        else:
+            toLeft = 1
+            
+        angles[i] = toLeft*(inRad*180/pi )#- (downWards*180))   # START VECTOR DIRECTION (-180°)
+
+        '''
         print "Distance: "+str(dists[i])
         print ""
-      
-    # calculate vectors
-    vects = np.zeros((len(x_pts),2)) 
-    vects[0][0] = 0     # start
-    vects[0][1] = 20    # vector
- 
-    for i in range(len(x_pts)-1):
-        # start with second vector (not start vector)
-        vects[i+1] = [x_pts[i]-x_pts[i+1],y_pts[i]-y_pts[i+1]]
-        print "Vector: "+str(vects[i][0])+"|"+str(vects[i][1])
+        print "Vector: "+str(vects[i+1][0])+"|"+str(vects[i+1][1])
+        print ""
+        print "Angle: "+str(angles[i])+"°"
+        print ""
+        '''
+    actList = [(angles[i],dists[i]) for i in range(len(dists))]
+    driveRoute(actList)
     
-    # calculate angle between all points
-    angles = np.zeros(len(x_pts)-1)
-
-    # TODO: 
 
     
 #######################################################################
