@@ -125,7 +125,6 @@ def driveRoute(actionList):
             # show/start rotating process
             print "Rotating "+str(angle)+" deg."
             if angle != 0:
-                angle = angle # drift bias
                 rotate(angle, process)
             print 
             print "Rotating finished."

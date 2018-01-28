@@ -8,7 +8,7 @@ def key_input(event):
     ct.init()
     #print 'Key:', event.char
     key_press = event.char
-    sleep_time = 0.030
+    sleep_time = 0.040
 
     # Define keys
     if key_press.lower() == 'w':

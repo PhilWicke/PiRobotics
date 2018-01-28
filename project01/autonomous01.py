@@ -74,7 +74,7 @@ def check_front():
                     sys.exit()
                     
             
-tf = 0.03
+tf = 0.04
 for z in range(500):
     check_front()
     ctr.init()
